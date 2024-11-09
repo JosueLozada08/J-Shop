@@ -23,6 +23,6 @@ class CheckAdmin
         }
 
         // Si el usuario no es administrador, redirigir a la página de inicio con un mensaje de error
-        return redirect()->route('home')->with('error', 'Acceso denegado. Solo para administradores.');
+        return redirect()->route('/dashboard')->with('error', 'Acceso denegado. Solo para administradores.');
     }
 }
