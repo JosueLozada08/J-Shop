@@ -8,25 +8,36 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Muestra el formulario de inicio de sesión.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    /**
+     * Procesa el inicio de sesión del usuario.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
     {
-        // Validación de credenciales
+        // Validar las credenciales
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        // Intento de autenticación
+        // Intentar autenticación
         if (Auth::attempt($credentials)) {
             // Regenerar la sesión para evitar ataques de fijación de sesión
             $request->session()->regenerate();
 
-            // Redirigir con mensaje de éxito
+            // Redirigir al dashboard con mensaje de éxito
             return redirect()->intended('admin/dashboard')->with('success', 'Logeado correctamente');
         }
 
@@ -36,6 +47,12 @@ class LoginController extends Controller
         ])->withInput($request->only('email'));
     }
 
+    /**
+     * Cierra la sesión del usuario.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -44,5 +61,4 @@ class LoginController extends Controller
 
         return redirect('/')->with('success', 'Has cerrado sesión correctamente.');
     }
-
 }

@@ -7,30 +7,32 @@
 <body>
     <h2>Iniciar Sesión</h2>
 
-    <!-- Mostrar mensaje de éxito si existe en la sesión -->
+    <!-- Mostrar mensaje de éxito -->
     @if (session('success'))
         <div style="color: green;">
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Mostrar mensaje de error si existe en la sesión -->
-    @if ($errors->any())
+    <!-- Mostrar mensaje de error -->
+    @if (session('error'))
         <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            {{ session('error') }}
         </div>
     @endif
 
-    <!-- Formulario de inicio de sesión -->
+    <!-- Mostrar errores de validación específicos (como credenciales incorrectas) -->
+    @if ($errors->has('email'))
+        <div style="color: red;">
+            {{ $errors->first('email') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <div>
             <label>Email:</label>
-            <input type="email" name="email" required autofocus value="{{ old('email') }}">
+            <input type="email" name="email" required autofocus>
         </div>
         <div>
             <label>Contraseña:</label>

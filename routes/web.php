@@ -34,7 +34,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-// Rutas de administración (requieren autenticación)
+// Rutas de administración (requieren autenticación y rol de administrador)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -43,4 +43,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+});
+
+// Ruta de redirección en caso de acceso no autorizado a rutas de administrador
+Route::fallback(function () {
+    return redirect()->route('login')->with('error', 'Acceso denegado. Necesitas permisos de administrador.');
 });
